@@ -33,15 +33,25 @@ async function run() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
 
+const collection = client.db('CoffeeDb').collection('Coffee');
 
+app.post('/coffee', async(req,res)=>{
+    const newcofee = req.body;
+    const result = await collection.insertOne(newcofee);
+    res.send(result);
+    
+})
+app.get('/coffee',async(req,res)=>{
+ const result =  await collection.find().toArray();
+ res.send(result);
+ console.log(result);
 
-
-
+})
 
 app.get('/',(req,res)=>{
     res.send('Hey! Wellcome to Cofee Bhai');
